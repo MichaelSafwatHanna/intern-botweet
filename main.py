@@ -1,8 +1,11 @@
+import datetime
 import getopt
 import sys
 
+from models.tweet import Tweet
 from services import tone_analyzer, io
 
+day_zero = datetime.date(2020, 8, 9)
 options = "n:a:s"
 long_options = ["new=", "append=", "stats"]
 command = sys.argv[1]
@@ -17,7 +20,11 @@ def main(args):
 
     if stats_flag:
         stats = tone_analyzer.analyze_document()
-        print(stats)
+        text = io.load_text()
+        day_n = (datetime.date.today() - day_zero).days
+        tweet = Tweet(day_n, text, stats)
+        tweet_str = tweet.to_string()
+        print(tweet_str)
 
 
 def add_command(opts):
