@@ -4,12 +4,14 @@ import sys
 
 from models.tweet import Tweet
 from services import tone_analyzer, io
+from services.logger import Logger, Color
 
 day_zero = datetime.date(2020, 8, 9)
 options = "n:a:s"
 long_options = ["new=", "append=", "stats"]
 command = sys.argv[1]
 stats_flag = sys.argv.__contains__("--stats") or sys.argv.__contains__("-s")
+logger = Logger()
 
 
 def main(args):
@@ -24,7 +26,12 @@ def main(args):
         day_n = (datetime.date.today() - day_zero).days
         tweet = Tweet(day_n, text, stats)
         tweet_str = tweet.to_string()
-        print(tweet_str)
+
+        logger.color = Color.Cyan
+        logger.log(tweet_str)
+
+        logger.color = Color.Red
+        logger.log("Characters: " + str(len(tweet_str)))
 
 
 def add_command(opts):
