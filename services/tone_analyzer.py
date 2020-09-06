@@ -22,7 +22,4 @@ def analyze_document():
         tone = tone_analyzer.tone(
             json.load(text)['text'],
             content_type='text/html').get_result()
-
-    # print(json.dumps(tone, indent=2))
-    # print(json.dumps(tone['document_tone'], indent=2))
     return tone['document_tone']

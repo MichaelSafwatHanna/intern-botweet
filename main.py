@@ -1,7 +1,7 @@
 import getopt
 import sys
 
-import io_service
+from services import tone_analyzer, io
 
 options = "n:a:"
 long_options = ["new=", "append="]
@@ -18,10 +18,10 @@ def main(args):
 def add_command(opts):
     for opt, arg in opts:
         if opt in ("-a", "--append"):
-            io_service.append_text_to_file(arg)
+            io.add_text_to_file(arg, append=True)
             break
         elif opt in ("-n", "--new"):
-            io_service.add_new_text_to_file(arg)
+            io.add_text_to_file(arg, append=False)
             break
 
 
