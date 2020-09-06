@@ -3,9 +3,10 @@ import sys
 
 from services import tone_analyzer, io
 
-options = "n:a:"
-long_options = ["new=", "append="]
+options = "n:a:s"
+long_options = ["new=", "append=", "stats"]
 command = sys.argv[1]
+stats_flag = sys.argv.__contains__("--stats") or sys.argv.__contains__("-s")
 
 
 def main(args):
@@ -13,6 +14,10 @@ def main(args):
 
     if command == "add":
         add_command(opts)
+
+    if stats_flag:
+        stats = tone_analyzer.analyze_document()
+        print(stats)
 
 
 def add_command(opts):
