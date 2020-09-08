@@ -1,9 +1,7 @@
+import datetime
 import json
-import os
-from os.path import join
 
-resources_path = join(os.getcwd(), 'resources/')
-app_settings = join(resources_path, 'app-cache.json')
+from dateutil.parser import parse as datetime_parser
 
 import services.config as config
 
@@ -35,3 +33,17 @@ def load_text():
     file_json = read_cache()
     text = file_json['text']
     return text
+
+
+def reset_tweets_index(file_json):
+    file_json['index'] = 0
+
+
+def validate_cached_data():
+    file_json = read_cache()
+    cached_date = datetime_parser(file_json['date']).date()
+    if cached_date != datetime.date.today():
+        file_json['date'] = str(datetime.date.today())
+        reset_tweets_index(file_json)
+
+    write_cache(file_json)
