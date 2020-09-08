@@ -4,6 +4,7 @@ import sys
 
 from models.tweet import Tweet
 from services import tone_analyzer, io
+from services.config import day_zero
 from services.logger import Logger, Color
 
 day_zero = datetime.date(2020, 8, 9)
