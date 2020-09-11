@@ -19,14 +19,11 @@ def write_cache(resources):
     file.close()
 
 
-def add_text_to_file(text, append):
-    file_json = read_cache()
-    if append:
-        file_json['text'] = file_json['text'] + ". " + text
-    else:
-        file_json['text'] = text
+    file_json['index'] += 1
 
-    write_cache(file_json)
+
+def reset_tweets_index(file_json):
+    file_json['index'] = 0
 
 
 def load_text():
