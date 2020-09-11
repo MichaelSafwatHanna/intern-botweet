@@ -19,6 +19,7 @@ def write_cache(resources):
     file.close()
 
 
+def increment_tweets_index(file_json):
     file_json['index'] += 1
 
 
@@ -26,14 +27,11 @@ def reset_tweets_index(file_json):
     file_json['index'] = 0
 
 
-def load_text():
+def update_last_tweet_id(last_id):
     file_json = read_cache()
-    text = file_json['text']
-    return text
-
-
-def reset_tweets_index(file_json):
-    file_json['index'] = 0
+    file_json['last_id'] = last_id
+    increment_tweets_index(file_json)
+    write_cache(file_json)
 
 
 def validate_cached_data():
