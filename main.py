@@ -32,8 +32,16 @@ def main(args):
 def log_tweet(tweet):
     logger.color = Color.Cyan
     logger.log(tweet)
-    logger.color = Color.Orange
-    logger.log("Characters: " + str(len(tweet)))
+    logger.color = Color.Yellow
+    logger.log("[Characters count]: " + str(len(tweet)))
+    validate_char_limit(tweet)
+
+
+def validate_char_limit(tweet):
+    if len(tweet) > twitter.CHARACTER_LIMIT:
+        logger.color = Color.Red
+        logger.log("Tweet characters exceed the limit!")
+        exit(1)
 
 
 def test_command(opts, args):
