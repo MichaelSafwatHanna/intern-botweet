@@ -25,6 +25,8 @@ def main(args):
             test_command(opts, args)
         elif command == "tweet":
             tweet_command(opts, args)
+        elif command == "slti":
+            slti_command(args)
     except getopt.GetoptError:
         pass
 
@@ -92,6 +94,10 @@ def tweet_command(opts, args):
             return
 
     push_tweet(tweet_str, tweet.in_reply_to_id, v_flag)
+
+
+def slti_command(args):
+    io_service.update_last_tweet_id(int(args[0]))
 
 
 def push_tweet(tweet, in_reply_to_id, verbose_flag):
