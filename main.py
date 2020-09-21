@@ -8,8 +8,8 @@ from services import io as io_service
 from services import tone_analyzer
 from services.logger import Logger, Color
 
-options = "syt"
-long_options = ["stats"]
+options = "sytv"
+long_options = ["stats", "verbose"]
 command = sys.argv[1]
 logger = Logger()
 
@@ -46,6 +46,7 @@ def validate_char_limit(tweet):
 
 def test_command(opts, args):
     t_flag = False
+    v_flag = False
     cache = io_service.read_cache()
     text = ' '.join(args)
     tweet = Tweet(cache['index'], text, None, cache['last_id'])
@@ -55,15 +56,19 @@ def test_command(opts, args):
             tweet.tone_analysis = tone_analyzer.analyze(text)
         if opt == "-t":
             t_flag = True
+            if opt in ("-v", "--verbose"):
+                v_flag = True
+
     tweet_str = tweet.to_string()
     log_tweet(tweet_str)
 
     if t_flag:
-        push_tweet(tweet_str, tweet.in_reply_to_id)
+        push_tweet(tweet_str, tweet.in_reply_to_id, v_flag)
 
 
 def tweet_command(opts, args):
     y_flag = False
+    v_flag = False
     cache = io_service.read_cache()
     text = ' '.join(args)
     tweet = Tweet(cache['index'], text, None, cache['last_id'])
@@ -73,6 +78,8 @@ def tweet_command(opts, args):
             y_flag = True
         if opt in ("-s", "--stats"):
             tweet.tone_analysis = tone_analyzer.analyze(text)
+        if opt in ("-v", "--verbose"):
+            v_flag = True
 
     tweet_str = tweet.to_string()
     log_tweet(tweet_str)
@@ -84,14 +91,19 @@ def tweet_command(opts, args):
         if choice != "y" and choice != "Y":
             return
 
-    push_tweet(tweet_str, tweet.in_reply_to_id)
+    push_tweet(tweet_str, tweet.in_reply_to_id, v_flag)
 
 
-def push_tweet(tweet, in_reply_to_id):
+def push_tweet(tweet, in_reply_to_id, verbose_flag):
     twitter_tweet = twitter.api.PostUpdate(tweet, in_reply_to_status_id=in_reply_to_id)
     io_service.update_last_tweet_id(twitter_tweet.id)
     logger.color = Color.Green
     logger.log("Tweet Posted Successfully!")
+    if verbose_flag:
+        logger.color = Color.Green
+        logger.log(f"Created at: [{twitter_tweet.created_at}]")
+        logger.log(f"Tweet id: [{twitter_tweet.id}]")
+        logger.log(f"In reply to status id: [{twitter_tweet.in_reply_to_status_id}]")
 
 
 if __name__ == "__main__":
