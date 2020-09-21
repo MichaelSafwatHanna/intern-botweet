@@ -8,7 +8,7 @@ from services import io as io_service
 from services import tone_analyzer
 from services.logger import Logger, Color
 
-options = "sy"
+options = "syt"
 long_options = ["stats"]
 command = sys.argv[1]
 logger = Logger()
@@ -45,40 +45,37 @@ def validate_char_limit(tweet):
 
 
 def test_command(opts, args):
-    stats = None
+    t_flag = False
+    cache = io_service.read_cache()
     text = ' '.join(args)
-    tweet = None
-    tweet_str = None
+    tweet = Tweet(cache['index'], text, None, cache['last_id'])
+
     for opt, arg in opts:
         if opt in ("-s", "--stats"):
-            stats = tone_analyzer.analyze(text)
-            cache = io_service.read_cache()
-            tweet = Tweet(cache['index'], text, stats, cache['last_id'])
-            tweet_str = tweet.to_string()
-            log_tweet(tweet_str)
+            tweet.tone_analysis = tone_analyzer.analyze(text)
+        if opt == "-t":
+            t_flag = True
+    tweet_str = tweet.to_string()
+    log_tweet(tweet_str)
 
-            logger.color = Color.Red
-            logger.log("Do you want to tweet? (y/n)")
-            choice = input()
-            if choice == "y" or choice == "Y":
-                push_tweet(tweet_str, tweet.in_reply_to_id)
+    if t_flag:
+        push_tweet(tweet_str, tweet.in_reply_to_id)
 
 
 def tweet_command(opts, args):
     y_flag = False
-    stats = None
+    cache = io_service.read_cache()
     text = ' '.join(args)
-    tweet = None
-    tweet_str = None
+    tweet = Tweet(cache['index'], text, None, cache['last_id'])
+
     for opt, arg in opts:
         if opt == "-y":
             y_flag = True
         if opt in ("-s", "--stats"):
-            stats = tone_analyzer.analyze(text)
-            cache = io_service.read_cache()
-            tweet = Tweet(cache['index'], text, stats, cache['last_id'])
-            tweet_str = tweet.to_string()
-            log_tweet(tweet_str)
+            tweet.tone_analysis = tone_analyzer.analyze(text)
+
+    tweet_str = tweet.to_string()
+    log_tweet(tweet_str)
 
     if not y_flag:
         logger.color = Color.Red

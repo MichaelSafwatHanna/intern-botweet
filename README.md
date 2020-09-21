@@ -50,6 +50,8 @@ test [OPTIONS] [TWEET TEXT]
 - Options
   - `-s, --stats`
     Analyze tone of the tweet text and include it in the tweet.
+  - `-t`
+    Post the tweet without prompt.
 
 ### Tweet
 
@@ -67,4 +69,4 @@ tweet [OPTIONS] [TWEET TEXT]
   - `-s, --stats`
     Analyze tone of the tweet text and include it in the tweet.
   - `-y`
-    Bypasses the post tweet prompt.
+    Post the tweet without prompt.
