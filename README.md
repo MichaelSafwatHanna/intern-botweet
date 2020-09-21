@@ -52,6 +52,8 @@ test [OPTIONS] [TWEET TEXT]
     Analyze tone of the tweet text and include it in the tweet.
   - `-t`
     Post the tweet without prompt.
+  - `-v, --verbose`
+    Logs metadata of the tweet after posting.
 
 ### Tweet
 
@@ -70,3 +72,17 @@ tweet [OPTIONS] [TWEET TEXT]
     Analyze tone of the tweet text and include it in the tweet.
   - `-y`
     Post the tweet without prompt.
+  - `-v, --verbose`
+    Logs metadata of the tweet after posting.
+
+### slti
+
+- Synopsis
+
+```bash
+slti [TWEET ID]
+```
+
+- Description
+
+  - Sets the last tweet id in the persistent cache.
