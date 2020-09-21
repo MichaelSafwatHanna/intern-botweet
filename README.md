@@ -86,3 +86,15 @@ slti [TWEET ID]
 - Description
 
   - Sets the last tweet id in the persistent cache.
+
+### rd
+
+- Synopsis
+
+```bash
+rd
+```
+
+- Description
+
+  - Prints remaining days and business days.

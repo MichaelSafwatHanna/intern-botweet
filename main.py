@@ -1,7 +1,11 @@
 import getopt
 import io
 import sys
+from datetime import datetime
 
+from progress.bar import Bar
+
+import services.config as config
 import services.twitter as twitter
 from models.tweet import Tweet
 from services import io as io_service
@@ -27,6 +31,8 @@ def main(args):
             tweet_command(opts, args)
         elif command == "slti":
             slti_command(args)
+        elif command == "rd":
+            rd_command()
     except getopt.GetoptError:
         pass
 
@@ -98,6 +104,21 @@ def tweet_command(opts, args):
 
 def slti_command(args):
     io_service.update_last_tweet_id(int(args[0]))
+
+
+def rd_command():
+    remaining_days = config.farewell_day - datetime.today().date()
+    bar = Bar('[Remaining    Days]', max=int(config.total_days.days), check_tty=False,
+              suffix='%(index)d/%(max)d | %(percent)d%%')
+    bar.goto(remaining_days.days)
+    bar.finish()
+
+    total_bus_days = config.total_days.days - (config.total_days.days % 7) * 2
+    remaining_bus_days = remaining_days.days - (remaining_days.days % 7) * 2
+    bar = Bar('[Remaining B. Days]', max=int(total_bus_days), check_tty=False,
+              suffix='%(index)d/%(max)d | %(percent)d%%')
+    bar.goto(remaining_bus_days)
+    bar.finish()
 
 
 def push_tweet(tweet, in_reply_to_id, verbose_flag):
