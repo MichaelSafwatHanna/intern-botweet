@@ -27,10 +27,10 @@ I started a thread on my twitter account on my first day as a 3-month backend in
   - At this point, you can add the keys which are under `Your Application Tokens` to test out your application, specifically at `services/twitter.py`.
 
     ```python
-    consumer_key = 'consumer_key'
-    consumer_secret = 'consumer_secret'
-    access_token = 'access_token'
-    access_token_secret = 'access_token_secret'
+    CONSUMER_KEY = 'CONSUMER_KEY'
+    CONSUMER_SECRET = 'CONSUMER_SECRET'
+    ACCESS_TOKEN = 'ACCESS_TOKEN'
+    ACCESS_TOKEN_SECRET = 'ACCESS_TOKEN_SECRET'
     ```
 
 ## Commands

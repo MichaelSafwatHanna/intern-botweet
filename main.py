@@ -1,3 +1,4 @@
+#! python
 import getopt
 import io
 import sys
@@ -31,8 +32,8 @@ def main(args):
             tweet_command(opts, args)
         elif command == "slti":
             slti_command(args)
-        elif command == "rd":
-            rd_command()
+        elif command == "ld":
+            ld_command(opts)
     except getopt.GetoptError:
         pass
 
@@ -103,27 +104,34 @@ def tweet_command(opts, args):
 
 
 def slti_command(args):
-    io_service.update_last_tweet_id(int(args[0]))
+    io_service.update_last_tweet_id(int(args[0]), int(args[1]))
 
 
-def rd_command():
-    remaining_days = config.farewell_day - datetime.today().date()
-    bar = Bar('[Remaining    Days]', max=int(config.total_days.days), check_tty=False,
-              suffix='%(index)d/%(max)d | %(percent)d%%')
-    bar.goto(remaining_days.days)
+def ld_command(opts):
+    t_flag = False
+    for opt, arg in opts:
+        if opt == "-t":
+            t_flag = True
+
+    finished_days = datetime.today().date() - config.day_zero
+    remaining_days = config.total_days - finished_days
+    bar = Bar('[Days]   ', max=int(config.total_days.days), check_tty=False,
+              suffix=f'%(index)d/%(max)d | %(percent)d%% | left: {remaining_days.days}', width=10)
+    bar.goto(finished_days.days)
     bar.finish()
 
-    total_bus_days = config.total_days.days - (config.total_days.days % 7) * 2
-    remaining_bus_days = remaining_days.days - (remaining_days.days % 7) * 2
-    bar = Bar('[Remaining B. Days]', max=int(total_bus_days), check_tty=False,
-              suffix='%(index)d/%(max)d | %(percent)d%%')
-    bar.goto(remaining_bus_days)
+    finished_business_days = finished_days.days - (finished_days.days % 7) * 2
+    total_business_days = config.total_days.days - (config.total_days.days % 7) * 2
+    remaining_business_days = total_business_days - finished_business_days
+    bar = Bar('[B. Days]', max=int(total_business_days), check_tty=False,
+              suffix=f'%(index)d/%(max)d | %(percent)d%% | left: {remaining_business_days}', width=10)
+    bar.goto(finished_business_days)
     bar.finish()
 
 
 def push_tweet(tweet, in_reply_to_id, verbose_flag):
     twitter_tweet = twitter.api.PostUpdate(tweet, in_reply_to_status_id=in_reply_to_id)
-    io_service.update_last_tweet_id(twitter_tweet.id)
+    io_service.update_last_tweet_id(twitter_tweet.id, None)
     logger.color = Color.Green
     logger.log("Tweet Posted Successfully!")
     if verbose_flag:
